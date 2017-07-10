@@ -10,6 +10,37 @@ facebook:
   resource:
     userInfoUri: https://graph.facebook.com/me
 
+google:
+  client:
+    clientId: 678181184380-2o32hl7oj76qacfhvt0pbkpq2fctp4ct.apps.googleusercontent.com
+    clientSecret: PAPXFtx7V5wbRmX63WI9273O
+#    userAuthorizationUri: https://accounts.google.com/o/oauth2/auth
+    userAuthorizationUri: https://accounts.google.com/o/oauth2/v2/auth
+#    accessTokenUri: https://accounts.google.com/o/oauth2/token
+    accessTokenUri: https://www.googleapis.com/oauth2/v4/token
+#    tokenName: authorization_code
+    tokenName: access_token
+    scope:
+      - profile
+      - https://www.googleapis.com/auth/plus.login
+      - email
+      - openid
+      - https://www.googleapis.com/auth/plus.me
+    authenticationScheme: query
+    clientAuthenticationScheme: form
+    preEstablishedRedirectUri: http://localhost:8080/login/google
+  resource:
+    userInfoUri: https://www.googleapis.com/oauth2/v3/userinfo
+#    userInfoUri: https://www.googleapis.com/plus/v1/people/me/openIdConnect
+#    userInfoUri: https://www.googleapis.com/oauth2/v3/tokeninfo
+    preferTokenInfo: true
+
 logging:
   level:
+    com.example: DEBUG
     org.springframework.security: DEBUG
+#    org.apache.http: DEBUG
+    org.apache.http.wire: DEBUG
+#    org.springframework.web.client: TRACE
+    org.springframework.web.client.RestTemplate: TRACE
+    org.springframework.boot.autoconfigure.security.oauth2: DEBUG
