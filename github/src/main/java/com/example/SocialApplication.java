@@ -116,6 +116,12 @@ public class SocialApplication extends WebSecurityConfigurerAdapter {
 	}
 
 	@Bean
+	@ConfigurationProperties("linkedin")
+	public ClientResources linkedin() {
+		return new ClientResources();
+	}
+
+	@Bean
 	@ConfigurationProperties("twitter")
 	public ClientResources twitter() {
 		return new ClientResources();
@@ -153,6 +159,7 @@ public class SocialApplication extends WebSecurityConfigurerAdapter {
 		filters.add(ssoFilter(google(), "/login/google"));
 		filters.add(ssoFilter(microsoft(), "/login/microsoft"));
 		filters.add(ssoFilter(twitter(), "/login/twitter"));
+		filters.add(ssoFilter(linkedin(), "/login/linkedin"));
 		filter.setFilters(filters);
 		return filter;
 	}
