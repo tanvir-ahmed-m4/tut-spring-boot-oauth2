@@ -15,6 +15,9 @@
  */
 package com.example;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -23,6 +26,8 @@ import java.util.Map;
 
 import javax.servlet.Filter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -34,8 +39,11 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpRequest;
+import org.springframework.http.client.*;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.oauth.consumer.OAuthSecurityContext;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter;
@@ -58,6 +66,9 @@ import org.springframework.web.filter.CompositeFilter;
 @EnableAuthorizationServer
 @Order(6)
 public class SocialApplication extends WebSecurityConfigurerAdapter {
+
+//	@Autowired
+//	OAuthSecurityContext oauthSecurityContext;
 
 	@Autowired
 	OAuth2ClientContext oauth2ClientContext;
@@ -105,6 +116,24 @@ public class SocialApplication extends WebSecurityConfigurerAdapter {
 	}
 
 	@Bean
+	@ConfigurationProperties("twitter")
+	public ClientResources twitter() {
+		return new ClientResources();
+	}
+
+	@Bean
+	@ConfigurationProperties("microsoft")
+	public ClientResources microsoft() {
+		return new ClientResources();
+	}
+
+	@Bean
+	@ConfigurationProperties("google")
+	public ClientResources google() {
+		return new ClientResources();
+	}
+
+	@Bean
 	@ConfigurationProperties("github")
 	public ClientResources github() {
 		return new ClientResources();
@@ -121,6 +150,9 @@ public class SocialApplication extends WebSecurityConfigurerAdapter {
 		List<Filter> filters = new ArrayList<>();
 		filters.add(ssoFilter(facebook(), "/login/facebook"));
 		filters.add(ssoFilter(github(), "/login/github"));
+		filters.add(ssoFilter(google(), "/login/google"));
+		filters.add(ssoFilter(microsoft(), "/login/microsoft"));
+		filters.add(ssoFilter(twitter(), "/login/twitter"));
 		filter.setFilters(filters);
 		return filter;
 	}
@@ -128,6 +160,10 @@ public class SocialApplication extends WebSecurityConfigurerAdapter {
 	private Filter ssoFilter(ClientResources client, String path) {
 		OAuth2ClientAuthenticationProcessingFilter oAuth2ClientAuthenticationFilter = new OAuth2ClientAuthenticationProcessingFilter(path);
 		OAuth2RestTemplate oAuth2RestTemplate = new OAuth2RestTemplate(client.getClient(), oauth2ClientContext);
+		oAuth2RestTemplate.setRequestFactory(new BufferingClientHttpRequestFactory(new HttpComponentsClientHttpRequestFactory()));
+		List<ClientHttpRequestInterceptor> interceptors = new ArrayList<ClientHttpRequestInterceptor>();
+		interceptors.add(new LoggingRequestInterceptor());
+		oAuth2RestTemplate.setInterceptors(interceptors);
 		oAuth2ClientAuthenticationFilter.setRestTemplate(oAuth2RestTemplate);
 		UserInfoTokenServices tokenServices = new UserInfoTokenServices(client.getResource().getUserInfoUri(),
 				client.getClient().getClientId());
@@ -153,4 +189,44 @@ class ClientResources {
 	public ResourceServerProperties getResource() {
 		return resource;
 	}
+}
+
+class LoggingRequestInterceptor implements ClientHttpRequestInterceptor {
+
+	final static Logger log = LoggerFactory.getLogger(LoggingRequestInterceptor.class);
+
+	@Override
+	public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
+		traceRequest(request, body);
+		ClientHttpResponse response = execution.execute(request, body);
+		traceResponse(response);
+		return response;
+	}
+
+	private void traceRequest(HttpRequest request, byte[] body) throws IOException {
+		log.debug("===========================request begin================================================");
+		log.debug("URI         : {}", request.getURI());
+		log.debug("Method      : {}", request.getMethod());
+		log.debug("Headers     : {}", request.getHeaders() );
+		log.debug("Request body: {}", new String(body, "UTF-8"));
+		log.debug("==========================request end================================================");
+	}
+
+	private void traceResponse(ClientHttpResponse response) throws IOException {
+		StringBuilder inputStringBuilder = new StringBuilder();
+		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(response.getBody(), "UTF-8"));
+		String line = bufferedReader.readLine();
+		while (line != null) {
+			inputStringBuilder.append(line);
+			inputStringBuilder.append('\n');
+			line = bufferedReader.readLine();
+		}
+		log.debug("============================response begin==========================================");
+		log.debug("Status code  : {}", response.getStatusCode());
+		log.debug("Status text  : {}", response.getStatusText());
+		log.debug("Headers      : {}", response.getHeaders());
+		log.debug("Response body: {}", inputStringBuilder.toString());
+		log.debug("=======================response end=================================================");
+	}
+
 }

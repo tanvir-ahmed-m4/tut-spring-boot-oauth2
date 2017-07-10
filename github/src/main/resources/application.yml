@@ -26,7 +26,70 @@ github:
     clientAuthenticationScheme: form
   resource:
     userInfoUri: https://api.github.com/user
+google:
+  client:
+    # https://console.developers.google.com/apis/credentials?project=tut-spring-boot-oauth2&pli=1
+    clientId: 678181184380-2o32hl7oj76qacfhvt0pbkpq2fctp4ct.apps.googleusercontent.com
+    clientSecret: PAPXFtx7V5wbRmX63WI9273O
+    userAuthorizationUri: https://accounts.google.com/o/oauth2/v2/auth
+    accessTokenUri: https://www.googleapis.com/oauth2/v4/token
+    tokenName: access_token
+    scope:
+      # https://developers.google.com/+/web/api/rest/oauth#profile
+      - profile
+      - https://www.googleapis.com/auth/plus.login
+      - email
+      - openid
+      - https://www.googleapis.com/auth/plus.me
+    authenticationScheme: query
+    clientAuthenticationScheme: form
+    preEstablishedRedirectUri: http://localhost:8080/login/google
+  resource:
+    userInfoUri: https://www.googleapis.com/oauth2/v3/userinfo
+#    userInfoUri: https://www.googleapis.com/plus/v1/people/me/openIdConnect
+#    userInfoUri: https://www.googleapis.com/oauth2/v3/tokeninfo
+    preferTokenInfo: true
+microsoft:
+  client:
+    # https://apps.dev.microsoft.com/#/application/07e159c5-0726-4e64-998a-fb88d4fcf0c4
+    clientId: 07e159c5-0726-4e64-998a-fb88d4fcf0c4
+    clientSecret: fqaYQubbdoqEqkPk4kfi7Qm
+    userAuthorizationUri: https://login.microsoftonline.com/common/oauth2/v2.0/authorize
+    accessTokenUri: https://login.microsoftonline.com/common/oauth2/v2.0/token
+    scope:
+      # https://docs.microsoft.com/en-gb/azure/active-directory/develop/active-directory-v2-scopes
+      - profile
+      - email
+      - openid
+#      - https://graph.microsoft.com/mail.read
+      - https://graph.microsoft.com/User.Read
+    clientAuthenticationScheme: form
+  resource:
+    # https://developer.microsoft.com/en-us/graph/docs/api-reference/v1.0/api/user_get#example
+    userInfoUri: https://graph.microsoft.com/v1.0/me
+twitter:
+  client:
+    # https://apps.twitter.com/app/7631631/show
+    clientId: BWjEsrsixzTTcr6yfj87qY8cI
+    clientSecret: ZsrpLbyySwb0nHerXWwduJgUzvBCRMh6IJuMDbN8dGm7GreSya
+    userAuthorizationUri: https://api.twitter.com/oauth/authorize
+#    userAuthorizationUri: https://api.twitter.com/oauth/request_token
+    accessTokenUri: https://api.twitter.com/oauth/access_token
+    tokenName: oauth_token
+    authenticationScheme: query
+    scope:
+      # https://dev.twitter.com/oauth/overview/application-permission-model
+      - read
+    clientAuthenticationScheme: form
+    preEstablishedRedirectUri: http://localhost:8080/login/twitter
+  resource:
+    # https://dev.twitter.com/rest/reference/get/users/lookup
+    userInfoUri: https://api.twitter.com/1.1/users/lookup.json
 
 logging:
   level:
+    com.example: DEBUG
     org.springframework.security: DEBUG
+    org.apache.http.wire: DEBUG
+    org.springframework.web.client.RestTemplate: TRACE
+    org.springframework.boot.autoconfigure.security.oauth2: DEBUG
