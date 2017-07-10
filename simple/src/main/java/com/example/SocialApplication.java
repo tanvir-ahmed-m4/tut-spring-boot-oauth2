@@ -18,6 +18,10 @@ package com.example;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.client.HttpComponentsAsyncClientHttpRequestFactory;
+import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
 @EnableOAuth2Sso
@@ -27,4 +31,13 @@ public class SocialApplication {
 		SpringApplication.run(SocialApplication.class, args);
 	}
 
+	@Configuration
+	public static class RestTemplateConfiguarion {
+		@Bean
+		RestTemplate getRestTemplate() {
+			RestTemplate restTemplate = new RestTemplate();
+			restTemplate.setRequestFactory(new HttpComponentsAsyncClientHttpRequestFactory());
+			return restTemplate;
+		}
+	}
 }

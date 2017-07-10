@@ -4,26 +4,14 @@ security:
       clientId: 678181184380-2o32hl7oj76qacfhvt0pbkpq2fctp4ct.apps.googleusercontent.com
       clientSecret: PAPXFtx7V5wbRmX63WI9273O
       accessTokenUri: https://accounts.google.com/o/oauth2/token
-#      accessTokenUri: https://www.googleapis.com/oauth2/v4/token
       userAuthorizationUri: https://accounts.google.com/o/oauth2/auth
-#      userAuthorizationUri: https://accounts.google.com/o/oauth2/v2/auth
       tokenName: authorization_code
       scope:
-        - openid
-        - email
-        - profile
+        - https://www.googleapis.com/auth/userinfo.email
+        - https://www.googleapis.com/auth/userinfo.profile
       authenticationScheme: query
       clientAuthenticationScheme: form
       preEstablishedRedirectUri: http://localhost:8080/login
     resource:
       userInfoUri: https://www.googleapis.com/auth/plus.me
 #      userInfoUri: https://www.googleapis.com/oauth2/v2/userinfo
-#      userInfoUri: https://www.googleapis.com/oauth2/v3/userinfo
-      preferTokenInfo: true
-
-logging.level:
-  org.apache.http: DEBUG
-  org.apache.http.wire: DEBUG
-  org.springframework.web.client: TRACE
-  org.springframework.web.client.RestTemplate: TRACE
-  org.springframework.boot.autoconfigure.security.oauth2: DEBUG
