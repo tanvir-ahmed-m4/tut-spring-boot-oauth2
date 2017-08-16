@@ -32,7 +32,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -168,8 +167,10 @@ public class SocialApplication extends WebSecurityConfigurerAdapter {
 		interceptors.add(new LoggingRequestInterceptor());
 		oAuth2RestTemplate.setInterceptors(interceptors);
 		oAuth2ClientAuthenticationFilter.setRestTemplate(oAuth2RestTemplate);
-		UserInfoTokenServices tokenServices = new UserInfoTokenServices(client.getResource().getUserInfoUri(),
-				client.getClient().getClientId());
+//		UserInfoTokenServices tokenServices = new UserInfoTokenServices(client.getResource().getUserInfoUri(),
+//				client.getClient().getClientId());
+		CustomUserInfoTokenServices tokenServices = new CustomUserInfoTokenServices(client.getResource().getUserInfoUri(),
+				client.getResource().getTokenInfoUri(), client.getClient().getClientId());
 		tokenServices.setRestTemplate(oAuth2RestTemplate);
 		oAuth2ClientAuthenticationFilter.setTokenServices(tokenServices);
 		return oAuth2ClientAuthenticationFilter;
