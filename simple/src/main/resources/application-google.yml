@@ -1,17 +1,24 @@
 security:
   oauth2:
     client:
-      clientId: 678181184380-2o32hl7oj76qacfhvt0pbkpq2fctp4ct.apps.googleusercontent.com
-      clientSecret: PAPXFtx7V5wbRmX63WI9273O
-      accessTokenUri: https://accounts.google.com/o/oauth2/token
-      userAuthorizationUri: https://accounts.google.com/o/oauth2/auth
-      tokenName: authorization_code
+      # https://console.developers.google.com/apis/credentials?project=tut-spring-boot-oauth2&pli=1
+      clientId: 678181184380-gt5r0es1j8k4gli44ev5l13d78joc752.apps.googleusercontent.com
+      clientSecret: LBPlijL-DZQbd_TFUxhLbUhw
+      userAuthorizationUri: https://accounts.google.com/o/oauth2/v2/auth
+      accessTokenUri: https://www.googleapis.com/oauth2/v4/token
+      tokenName: access_token
       scope:
-        - https://www.googleapis.com/auth/userinfo.email
-        - https://www.googleapis.com/auth/userinfo.profile
+        # https://developers.google.com/+/web/api/rest/oauth#profile
+        - profile
+        - https://www.googleapis.com/auth/plus.login
+        - email
+        - openid
+        - https://www.googleapis.com/auth/plus.me
       authenticationScheme: query
       clientAuthenticationScheme: form
       preEstablishedRedirectUri: http://localhost:8080/login
     resource:
-      userInfoUri: https://www.googleapis.com/auth/plus.me
-#      userInfoUri: https://www.googleapis.com/oauth2/v2/userinfo
+      userInfoUri: https://www.googleapis.com/oauth2/v3/userinfo
+  #    userInfoUri: https://www.googleapis.com/plus/v1/people/me/openIdConnect
+      tokenInfoUri: https://www.googleapis.com/oauth2/v3/tokeninfo
+      preferTokenInfo: false
