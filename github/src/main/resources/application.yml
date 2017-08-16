@@ -97,6 +97,19 @@ linkedin:
     clientAuthenticationScheme: form
   resource:
     userInfoUri: https://api.linkedin.com/v1/people/~?format=json
+uaa:
+  # mvn -pl github -Dserver.contextPath=/myapp spring-boot:run
+  # http://localhost:8080/myapp/login/uaa
+  # http://localhost:8080/myapp/me
+  client:
+    clientId: mywebapp
+    clientSecret: changeme
+    accessTokenUri: http://localhost:9999/oauth/token
+    userAuthorizationUri: http://localhost:9999/oauth/authorize
+    authenticationScheme: header
+  resource:
+    userInfoUri: http://localhost:9999/userinfo
+    tokenInfoUri: http://localhost:9999/check_token
 
 logging:
   level:

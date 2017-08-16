@@ -111,6 +111,12 @@ public class SocialApplication extends WebSecurityConfigurerAdapter {
 	}
 
 	@Bean
+	@ConfigurationProperties("uaa")
+	public ClientResources uaa() {
+		return new ClientResources();
+	}
+
+	@Bean
 	@ConfigurationProperties("linkedin")
 	public ClientResources linkedin() {
 		return new ClientResources();
@@ -155,6 +161,7 @@ public class SocialApplication extends WebSecurityConfigurerAdapter {
 		filters.add(ssoFilter(microsoft(), "/login/microsoft"));
 		filters.add(ssoFilter(twitter(), "/login/twitter"));
 		filters.add(ssoFilter(linkedin(), "/login/linkedin"));
+		filters.add(ssoFilter(uaa(), "/login/uaa"));
 		filter.setFilters(filters);
 		return filter;
 	}
