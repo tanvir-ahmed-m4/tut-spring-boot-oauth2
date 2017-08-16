@@ -47,7 +47,7 @@ google:
   resource:
     userInfoUri: https://www.googleapis.com/oauth2/v3/userinfo
 #    userInfoUri: https://www.googleapis.com/plus/v1/people/me/openIdConnect
-#    userInfoUri: https://www.googleapis.com/oauth2/v3/tokeninfo
+    tokenInfoUri: https://www.googleapis.com/oauth2/v3/tokeninfo
     preferTokenInfo: true
 microsoft:
   client:
@@ -73,10 +73,12 @@ twitter:
     clientId: BWjEsrsixzTTcr6yfj87qY8cI
     clientSecret: ZsrpLbyySwb0nHerXWwduJgUzvBCRMh6IJuMDbN8dGm7GreSya
     userAuthorizationUri: https://api.twitter.com/oauth/authorize
+#    userAuthorizationUri: https://api.twitter.com/oauth/authenticate
 #    userAuthorizationUri: https://api.twitter.com/oauth/request_token
     accessTokenUri: https://api.twitter.com/oauth/access_token
-    tokenName: oauth_token
-    authenticationScheme: query
+#    tokenName: oauth_token
+#    authenticationScheme: query
+    authenticationScheme: form
     scope:
       # https://dev.twitter.com/oauth/overview/application-permission-model
       - read
@@ -84,7 +86,8 @@ twitter:
     preEstablishedRedirectUri: http://localhost:8080/login/twitter
   resource:
     # https://dev.twitter.com/rest/reference/get/users/lookup
-    userInfoUri: https://api.twitter.com/1.1/users/lookup.json
+#    userInfoUri: https://api.twitter.com/1.1/users/lookup.json
+    userInfoUri:  https://api.twitter.com/1.1/users/show.json
 linkedin:
   client:
     clientId: 81om4awiw4mdd0

@@ -43,7 +43,6 @@ import org.springframework.http.HttpRequest;
 import org.springframework.http.client.*;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.oauth.consumer.OAuthSecurityContext;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter;
@@ -66,9 +65,6 @@ import org.springframework.web.filter.CompositeFilter;
 @EnableAuthorizationServer
 @Order(6)
 public class SocialApplication extends WebSecurityConfigurerAdapter {
-
-//	@Autowired
-//	OAuthSecurityContext oauthSecurityContext;
 
 	@Autowired
 	OAuth2ClientContext oauth2ClientContext;
@@ -178,7 +174,6 @@ public class SocialApplication extends WebSecurityConfigurerAdapter {
 		oAuth2ClientAuthenticationFilter.setTokenServices(tokenServices);
 		return oAuth2ClientAuthenticationFilter;
 	}
-
 }
 
 class ClientResources {
